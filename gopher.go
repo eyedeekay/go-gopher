@@ -707,6 +707,7 @@ func (c *conn) serve(ctx context.Context) {
 		if neterr, ok := err.(net.Error); ok && neterr.Timeout() {
 			return // don't reply
 		}
+		log.Printf("ERROR!!!!", err.Error())
 		io.WriteString(c.rwc, "3\tbad request\terror.host\t0")
 		return
 	}
@@ -753,14 +754,16 @@ func (c *conn) readRequest(ctx context.Context) (w *response, err error) {
 		return nil, err
 	}
 
-	var localaddr net.Addr
+	var localaddrstring string
 	switch ctx.Value(LocalAddrContextKey).(type) {
 	case i2pkeys.I2PAddr:
-		localaddr = ctx.Value(LocalAddrContextKey).(i2pkeys.I2PAddr)
+		localaddr := ctx.Value(LocalAddrContextKey).(i2pkeys.I2PAddr)
+		localaddrstring = localaddr.String()+":0"
 	default:
-		localaddr = ctx.Value(LocalAddrContextKey).(*net.TCPAddr)
+		localaddr := ctx.Value(LocalAddrContextKey).(*net.TCPAddr)
+		localaddrstring = localaddr.String()
 	}
-	host, port, err := net.SplitHostPort(localaddr.String())
+	host, port, err := net.SplitHostPort(localaddrstring)
 	if err != nil {
 		return nil, err
 	}
