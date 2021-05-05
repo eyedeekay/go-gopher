@@ -157,6 +157,10 @@ type Item struct {
 	Extras []string `json:"extras"`
 }
 
+var Dial Dialer = net.Dial
+
+type Dialer func(string, string) (net.Conn, error)
+
 // ParseItem parses a line of text into an item
 func ParseItem(line string) (item *Item, err error) {
 	parts := strings.Split(strings.Trim(line, "\r\n"), "\t")
@@ -374,7 +378,7 @@ func (i *Item) FetchFile() (io.ReadCloser, error) {
 		return nil, errors.New("cannot fetch a directory as a file")
 	}
 
-	conn, err := net.Dial("tcp", i.Host+":"+strconv.Itoa(i.Port))
+	conn, err := Dial("tcp", i.Host+":"+strconv.Itoa(i.Port))
 	if err != nil {
 		return nil, err
 	}
@@ -395,7 +399,7 @@ func (i *Item) FetchDirectory() (Directory, error) {
 		return Directory{}, errors.New("cannot fetch a file as a directory")
 	}
 
-	conn, err := net.Dial("tcp", i.Host+":"+strconv.Itoa(i.Port))
+	conn, err := Dial("tcp", i.Host+":"+strconv.Itoa(i.Port))
 	if err != nil {
 		return Directory{}, err
 	}
