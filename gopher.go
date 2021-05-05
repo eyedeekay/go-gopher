@@ -758,7 +758,7 @@ func (c *conn) readRequest(ctx context.Context) (w *response, err error) {
 	switch ctx.Value(LocalAddrContextKey).(type) {
 	case i2pkeys.I2PAddr:
 		localaddr := ctx.Value(LocalAddrContextKey).(i2pkeys.I2PAddr)
-		localaddrstring = localaddr.String()+":0"
+		localaddrstring = localaddr.String() + ":0"
 	default:
 		localaddr := ctx.Value(LocalAddrContextKey).(*net.TCPAddr)
 		localaddrstring = localaddr.String()
