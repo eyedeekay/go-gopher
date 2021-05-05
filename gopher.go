@@ -29,6 +29,8 @@ import (
 	"sync"
 
 	"golang.org/x/net/context"
+
+	"github.com/eyedeekay/sam3/i2pkeys"
 )
 
 // Item Types
@@ -751,7 +753,13 @@ func (c *conn) readRequest(ctx context.Context) (w *response, err error) {
 		return nil, err
 	}
 
-	localaddr := ctx.Value(LocalAddrContextKey).(*net.TCPAddr)
+	var localaddr net.Addr
+	switch ctx.Value(LocalAddrContextKey).(type) {
+	case i2pkeys.I2PAddr:
+		localaddr = ctx.Value(LocalAddrContextKey).(i2pkeys.I2PAddr)
+	default:
+		localaddr = ctx.Value(LocalAddrContextKey).(*net.TCPAddr)
+	}
 	host, port, err := net.SplitHostPort(localaddr.String())
 	if err != nil {
 		return nil, err
