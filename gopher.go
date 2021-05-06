@@ -707,7 +707,6 @@ func (c *conn) serve(ctx context.Context) {
 		if neterr, ok := err.(net.Error); ok && neterr.Timeout() {
 			return // don't reply
 		}
-		log.Printf("ERROR!!!!", err.Error())
 		io.WriteString(c.rwc, "3\tbad request\terror.host\t0")
 		return
 	}
