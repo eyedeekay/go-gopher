@@ -30,7 +30,7 @@ import (
 
 	"golang.org/x/net/context"
 
-	"github.com/eyedeekay/sam3/i2pkeys"
+	"github.com/eyedeekay/i2pkeys"
 )
 
 // Item Types
